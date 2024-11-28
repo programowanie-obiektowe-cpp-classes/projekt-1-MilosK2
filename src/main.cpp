@@ -1,6 +1,8 @@
-#include "PrintHello.hpp"
+#include "game.hpp"
 
 int main()
 {
-    printHello();
+    Game play;
+    play.run();
+
 }
