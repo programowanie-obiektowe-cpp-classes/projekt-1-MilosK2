@@ -42,7 +42,7 @@ void Game::user_move()
             company.hire< Worker >();
             break;
         case 6: //{"kred",6},
-            company.get_credit();
+            company.get_loan();
             break;
         case 7: //{"kt",7},
             next_turn = true;

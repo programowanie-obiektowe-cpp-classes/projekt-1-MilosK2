@@ -76,8 +76,7 @@ inline auto getRandomName() -> std::string {
 inline auto getRandomFaculty() -> std::string
 {
     static auto prng    = std::mt19937{std::random_device{}()};
-    auto        fnd     = std::uniform_int_distribution< std::size_t >{0, first_names.size() - 1};
-    auto        lnd     = std::uniform_int_distribution< std::size_t >{0, last_names.size() - 1};
+    auto        fnd     = std::uniform_int_distribution< std::size_t >{0, faculties.size() - 1};
     const auto  faculty = faculties[fnd(prng)];
     return std::format("{}", faculty);
 }

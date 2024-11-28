@@ -7,9 +7,9 @@
 
 class Engineer
 {public:
-    Engineer(std::string name) : name_(name), faculty_(getRandomFaculty()) {
+    Engineer() : name_(getRandomName()), faculty_(getRandomFaculty()) {
     }
-    void print();
+    void print() const;
     const static double CI;
     const static int    salary = ENGINNER_SALARY;
 
@@ -21,8 +21,8 @@ private:
 class Storeman
 {
 public:
-    Storeman(std::string name) : name_(name), forklift_(getRandomForklift()) {}
-    void print();
+    Storeman() : name_(getRandomName()), forklift_(getRandomForklift()) {}
+    void             print() const;
     const static int CStr   = STOREMAN_EFFICIENCY;
     const static int salary = STOREMAN_SALARY;
 
@@ -33,8 +33,8 @@ private:
 class Marketer
 {
 public:
-    Marketer(std::string name) : name_(name), follows_(getRandomFollows()) {}
-    void print();
+    Marketer() : name_(getRandomName()), follows_(getRandomFollows()) {}
+    void             print() const;
     const static int CMkt   = MARKETER_EFFICIENCY;
     const static int salary = MARKETER_SALARY;
 
@@ -45,8 +45,8 @@ private:
 class Worker
 {
 public:
-    Worker(std::string name) : name_(name), shoe_(getRandomShoe()) {}
-    void   print();
+    Worker() : name_(getRandomName()), shoe_(getRandomShoe()) {}
+    void             print() const;
     const static int CW     = WORKER_EFFICIENCY;
     const static int salary = WORKER_SALARY;
 

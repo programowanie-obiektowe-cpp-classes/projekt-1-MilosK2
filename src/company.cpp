@@ -4,8 +4,10 @@
 #include <iostream>
 #include "game.hpp"
 #include "workers.hpp"
+#include <numeric>
+#include <ranges>
 
-Company::Company() : Workers(0), Marketers(0), Engineers(0), Storemans(0), employees(0), loans(0), history(0)
+Company::Company()
 {
     hire< Engineer >();
     hire< Marketer >();
@@ -16,10 +18,10 @@ void Company::print_employees()
 {
     for (auto& e : employees) 
     {
-       std::visit(VisitEmployees{}, *e);
+       std::visit(VisitEmployees{}, e);
     }
 }
-void Company::get_credit()
+void Company::get_loan()
 {
     double amount      = 0;
     int    installment = 0;
@@ -29,19 +31,27 @@ void Company::get_credit()
     std::cin >> installment;
     std::cout << std::endl;
 
-    loans.push_back(std::make_unique< Loan >(amount, installment));
+     double debt_sum =
+        std::reduce(loans.begin(), loans.end(), 0, [](double acc, const Loan& obj) { return acc + obj.debt_; });
+
+    if (installment > MAX_INSTALLMENT)
+       std::cout << "Maksymalna liczba rat to 12" << std::endl;
+    else if (debt_sum + amount > LOAN_LIMIT_COEFFICIENT* get_goodwill())
+       std::cout << "Nie wolno przekroczyæ limitu zad³u¿enia" << std::endl;
+    else
+        loans.emplace_back(Loan(amount, installment));
 }
 
 void Company::pay_salary()
 {
     for (auto& e : employees) {
-       if (std::holds_alternative< Engineer >(*e))
+       if (std::holds_alternative< Engineer >(e))
            account_balance -= Engineer::salary;
-       else if (std::holds_alternative< Marketer >(*e))
+       else if (std::holds_alternative< Marketer >(e))
            account_balance -= Marketer::salary;
-       else if (std::holds_alternative< Storeman >(*e))
+       else if (std::holds_alternative< Storeman >(e))
            account_balance -= Storeman::salary;
-       else if (std::holds_alternative< Worker >(*e))
+       else if (std::holds_alternative< Worker >(e))
            account_balance -= Worker::salary;
     }
 }
@@ -53,8 +63,8 @@ void Company::pay_credits()
 {
     for (auto it = loans.begin(); it != loans.end();)
     {
-       account_balance -= (*it)->pay_installment();
-       if ((*it)->installment_left_ == 0)
+       account_balance -= (it)->pay_installment();
+       if ((it)->installment_left_ == 0)
            it = loans.erase(it);
        else
            ++it;
@@ -67,12 +77,10 @@ double Company::get_account_balance()
 }
 double Company::get_goodwill()
 {
-    double sum = 0;
     int    count   = 0;
-    for (auto iter = history.rbegin(); iter != history.rend() and iter != (history.rbegin() + 3); ++iter)
-    {
-       sum += *iter;
-    }
+
+    auto last3 = history | std::views::drop(std::max(0, static_cast< int >(history.size()) - 3));
+    int  sum   = std::accumulate(last3.begin(), last3.end(), 0);
 
     return sum;
 }

@@ -17,5 +17,6 @@
 #define WORKER_SALARY 5000
 
 #define LOAN_LIMIT_COEFFICIENT 3
+#define MAX_INSTALLMENT 12
 
 #endif // !CONFIG_H

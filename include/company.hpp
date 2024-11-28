@@ -11,11 +11,10 @@ class Company
 {
 public:
     Company();
-    ~Company()            = default;
     using EmployeeVariant = std::variant<Engineer, Storeman, Marketer, Worker>;
 
     void print_employees();
-    void get_credit();
+    void get_loan();
 
     template<typename employee_t>
     void hire();
@@ -32,14 +31,14 @@ private:
     double calculate_profit();
     double account_balance = INIT_ACCOUNT_BALANCE;
     int    produced_goods=0;
-    int Workers;
-    int Engineers;
-    int Marketers;
-    int Storemans;
+    int Workers=0;
+    int Engineers=0;
+    int Marketers=0;
+    int Storemans=0;
 
-    std::vector< double >                                                              history;
-    std::list<std::unique_ptr< class Loan >>                                           loans;
-    std::vector<std::unique_ptr< std::variant< Engineer, Storeman, Marketer, Worker > >> employees;
+    std::vector< double >          history;
+    std::list< class Loan >        loans;
+    std::vector< EmployeeVariant > employees;
     
 };
 
@@ -54,8 +53,8 @@ void Company::hire()
         Storemans++;
     else if constexpr (std::is_same_v< employee_t, Worker >)
         Workers++;
-
-    employees.push_back(std::make_unique< EmployeeVariant >(employee_t(getRandomName())));
+    
+    employees.emplace_back(employee_t());
 }
 
 #endif // !COMPANY_H
